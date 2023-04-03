@@ -1,12 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Rock - Paper - Scissors</title>
-</head>
-<body>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <div class="game-container">
+      <div class="game-board">
+        <p class="round">The war has begun...</p>
+        <p class="score">Player wins: 0 - Machine wins: 0</p>
+      </div>
+      <button id="rock" class="choice">Rock</button>
+      <button id="paper" class="choice">Paper</button>
+      <button id="scissors" class="choice">Scissor</button>
+      <div class="result"></div>
+      <button class="play-again">Play again?</button>
+    </div>
+
     <script src="script.js"></script>
-</body>
+  </body>
 </html>

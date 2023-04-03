@@ -1,48 +1,52 @@
 const CHOICES = {
   rock: {
     beats: "scissors",
-    message: "Rock beats scissors.",
   },
   paper: {
     beats: "rock",
-    message: "Paper beats rock.",
   },
   scissors: {
     beats: "paper",
-    message: "Scissors beats paper.",
   },
 };
 
-// Esta accion genera un numero random entre el 1 y el 3, segun el numero retorna roca, papel o tijeras
+const gameContainer = document.querySelector(".game-container");
+const roundBoard = document.querySelector(".round");
+const scoreBoard = document.querySelector(".score");
+const resultBoard = document.querySelector(".result");
+const plays = document.querySelectorAll(".choice");
+const playAgainBtn = document.querySelector(".play-again");
+
+playAgainBtn.addEventListener("click", resetGame);
+
+plays.forEach((play) => {
+  play.addEventListener("click", getPlayerChoice);
+});
+
+let round = 1;
+let playerWins = 0;
+let machineWins = 0;
+
+function getPlayerChoice(e) {
+  let choice = e.target.id;
+  updateGame(choice);
+}
+
 function getComputerChoice() {
   let choice = Math.floor(Math.random() * 3) + 1;
-
-  return getChoice(choice);
-}
-
-// Esta accion pregunta al usuario un numero del 1 al 3, segun el numero retorna piedra, papel o tijeras
-function getPlayerChoice() {
-  let choice = +prompt("Choose your number:\n1. Rock\n2. Paper\n3. Scissors");
-
-  return getChoice(choice);
-}
-
-// Esta accion retorna piedra, papel o tijeras segun numero
-function getChoice(choice) {
   switch (choice) {
     case 1:
-      return "Rock";
+      return "rock";
     case 2:
-      return "Paper";
+      return "paper";
     case 3:
-      return "Scissors";
+      return "scissors";
   }
 }
 
-// Esta accion crea la variable playerChoice y computerChoice y almacena en ellas las elecciones del jugador (param1) y la computadora (param2), transforma el string a minus, luego se comparan las elecciones del jugador y la computadora, retorna un string con el resultado
 function playRound(playerSelection, computerSelection) {
-  let playerChoice = playerSelection.toLowerCase();
-  let computerChoice = computerSelection.toLowerCase();
+  let playerChoice = playerSelection;
+  let computerChoice = computerSelection;
 
   let result =
     CHOICES[playerChoice].beats === computerChoice
@@ -50,63 +54,63 @@ function playRound(playerSelection, computerSelection) {
       : CHOICES[computerChoice].beats === playerChoice
       ? "lost"
       : "tie";
-  let message =
-    result === "tie"
-      ? "Tie!"
-      : `You ${result}! ${CHOICES[playerChoice].message}`;
+  let message = result === "tie" ? "Tie!" : `You ${result}!`;
 
   return {
     message: message,
-    result: result
+    result: result,
   };
 }
 
-// Accion que pregunta al usuario si quiere jugar de nuevo
-function playAgain() {
-  let playAgain = confirm("Play again?");
+function checkWinner() {
+  if (playerWins === 5 || machineWins === 5 || round > 5) {
+    let warResult =
+      playerWins >= machineWins
+        ? "Humans survived machine's rebelation!"
+        : "Humans were destroyed...";
+    resultBoard.textContent = warResult;
 
-  if (playAgain === true) {
-    game();
-  } else {
-    console.log("Thanks for playing!");
+    playAgainBtn.style.display = "block";
+
+    plays.forEach((play) => {
+      play.removeEventListener("click", getPlayerChoice);
+    });
   }
 }
 
-// Accion principal. Ejecuta 5 rondas de juego
-function game() {
-  let playerWins = 0;
-  let machineWins = 0;
+function resetGame() {
+  round = 1;
+  playerWins = 0;
+  machineWins = 0;
+  roundBoard.textContent = `Round ${round}`;
+  scoreBoard.textContent = `Player wins: ${playerWins} - Machine wins: ${machineWins}`;
+  resultBoard.textContent = "";
+  playAgainBtn.style.display = "none";
 
-  for (let round = 1; round <= 5; round++) {
-    console.log(`Round ${round}`);
-
-    console.log(`Player wins: ${playerWins} - Machine wins: ${machineWins}`)
-
-    let playerSelection = getPlayerChoice();
-    let computerSelection = getComputerChoice();
-
-    if (!playerSelection) {
-      console.log("Thanks for playing!");
-      return;
-    }
-
-    console.log(`Player choice: ${playerSelection}`);
-    console.log(`Computer choice: ${computerSelection}`);
-
-    let result = playRound(playerSelection, computerSelection);
-    console.log(result.message);
-
-    if (result.result === 'won') {
-      playerWins++;
-    } else if (result.result === 'lost') {
-      machineWins++;
-    }
-  }
-
-  let warResult = playerWins >= machineWins ? "Humans survived machine's rebelation!" : "Humans were destroyed...";
-  console.log(warResult);
-
-  playAgain();
+  plays.forEach((play) => {
+    play.addEventListener("click", getPlayerChoice);
+  });
 }
 
-game();
+function updateGame(choice) {
+  roundBoard.textContent = `Round ${round}`;
+  round++;
+
+  let playerSelection = choice;
+  let computerSelection = getComputerChoice();
+
+  console.log(`Player choice: ${playerSelection}`);
+  console.log(`Computer choice: ${computerSelection}`);
+
+  let result = playRound(playerSelection, computerSelection);
+  resultBoard.textContent = result.message;
+
+  if (result.result === "won") {
+    playerWins++;
+  } else if (result.result === "lost") {
+    machineWins++;
+  }
+  scoreBoard.textContent = `Player wins: ${playerWins} - Machine wins: ${machineWins}`;
+
+  checkWinner();
+}
