@@ -66,7 +66,7 @@ function checkWinner() {
   if (playerWins === 5 || machineWins === 5 || round > 5) {
     let warResult =
       playerWins >= machineWins
-        ? "Humans survived machine's rebelation!"
+        ? "Humans survived machines rebelation!"
         : "Humans were destroyed...";
     resultBoard.textContent = warResult;
 
@@ -83,7 +83,7 @@ function resetGame() {
   playerWins = 0;
   machineWins = 0;
   roundBoard.textContent = `Round ${round}`;
-  scoreBoard.textContent = `Player wins: ${playerWins} - Machine wins: ${machineWins}`;
+  scoreBoard.textContent = `Player's wins: ${playerWins} - Machine's wins: ${machineWins}`;
   resultBoard.textContent = "";
   playAgainBtn.style.display = "none";
 
@@ -110,7 +110,7 @@ function updateGame(choice) {
   } else if (result.result === "lost") {
     machineWins++;
   }
-  scoreBoard.textContent = `Player wins: ${playerWins} - Machine wins: ${machineWins}`;
+  scoreBoard.textContent = `Player's wins: ${playerWins} - Machine's wins: ${machineWins}`;
 
   checkWinner();
 }
